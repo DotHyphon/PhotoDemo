@@ -115,9 +115,10 @@ body {
     text-decoration: none;
     white-space: nowrap;
 }
-.hdrWhite a:visited {
+.hdrWhite a:visited, .hdrWhite a:link {
     color: black;
 }
+
 
 .wrapper {
     margin: 20px;
@@ -211,7 +212,7 @@ ul li a {
     height: 18px;
 }
 
-ul li a:visited {
+ul li a:visited, ul li a:link {
     color: black;
 }
 

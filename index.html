@@ -10,25 +10,20 @@
 <body>
     <header class="topHeader hdrBlack" >
         <form id="searchForm" style="display:flex; flex: 1; text-align: start;">
-            <input type="search" placeholder="Search photos" name="search" id="search">
+            <input type="search" placeholder="Search photos" name="search" id="search" required>
             <button class="fa-solid fa-magnifying-glass" style="translate: -25px 0; background: transparent; border: none; color: white; font-size: 16px;"></button>
         </form>
         <span class="lrgScreen" style="flex: 1"></span>
-        <a style="flex: 1; white-space: nowrap;" href="#" id="topLogo">
-        <span class="lrgScreen" style="font-size: 20px;">Photography Showcase</span>
-        <span class="smlScreen" style="font-size: 14px;">Photography Showcase</span>
+        <a style="flex: 1; white-space: nowrap;" href="/" id="topLogo">
+            <span class="lrgScreen" style="font-size: 20px;">Photography Showcase</span>
+            <span class="smlScreen" style="font-size: 14px;">Photography Showcase</span>
         </a> 
         <span class="lrgScreen" style="flex: 1"></span>   
         <span class="lrgScreen" style="flex: 1"></span>
     </header>
     <header class="topHeader hdrWhite" style="top:55px">
         <div class="wrapper">
-            <i class="fa-solid fa-palette"></i>
-            <a style="font-weight:bold;" href="#">Random Photo</a>
-        </div>
-        <div class="wrapper">
-            <i class="fa-solid fa-person"></i>
-            <a style="font-weight:bold;" href="#">Random Photographer</a>
+            <p id="displaySearch" style="font-weight:bold;" href="/"></p>
         </div>
     </header>
 
@@ -49,61 +44,50 @@
             </a>
         </div>
         <ul class="lrgScreen">
-            <li><a href="#">Framed Prints</a></li>
-            <li><a href="#">Throw Pillows</a></li>
-            <li><a href="#">Canvas Prints</a></li>
-            <li><a href="#">All Over T-Shirts</a></li>
-            <li><a href="#">Aluminium Prints</a></li>
-            <li><a href="#">Blankets</a></li>
-            <li><a href="#">Disk Prints</a></li>
+            <li><a href="?search=Nature">Nature</a></li>
+            <li><a href="?search=Animals">Animals</a></li>
+            <li><a href="?search=Landscapes">Landscapes</a></li>
+            <li><a href="?search=City Skylines">City Skylines</a></li>
+            <li><a href="?search=International">International</a></li>
+            <li><a href="?search=Abstract">Abstract</a></li>
+            <li><a href="?search=Potato">Potato</a></li>
         </ul>
 
         <ul class="smlScreen">
-            <li><a href="#">Framed Prints</a></li>
-            <li><a href="#">Throw Pillows</a></li>
-            <li><a href="#">Canvas Prints</a></li>
+            <li><a href="?search=Nature">Nature</a></li>
+            <li><a href="?search=Animals">Animals</a></li>
+            <li><a href="?search=Landscapes">Landscapes</a></li>
         </ul>
         <ul class="smlScreen">
-            <li><a href="#">All Over T-Shirts</a></li>
-            <li><a href="#">Aluminium Prints</a></li>
+            <li><a href="?search=City Skylines">City Skylines</a></li>
+            <li><a href="?search=International">International</a></li>
         </ul>
         <ul class="smlScreen">
-            <li><a href="#">Blankets</a></li>
-            <li><a href="#">Disk Prints</a></li>
+            <li><a href="?search=Abstract">Abstract</a></li>
+            <li><a href="?search=Potato">Potato</a></li>
         </ul>
 
         <div id="linksGrid">
-            <div style="grid-column: span 2;">
-                <a href="#"><img src="./images/signed-prints.jpg" alt=""></a>    
-                <h1>SIGNED PRINTS</h1>
-            </div>
-            <div style="grid-column: span 1;">
-                <a href="#"><img src="./images/aluminium-prints.jpg" alt=""></a>
-                <h1>ALUMINIUM PRINTS</h1>
-            </div>
-            <div style="grid-column: span 1;">
-                <a  href="#"><img src="./images/classic-t-shirts.jpg" alt=""></a>
-                <h1>CLASSIC T-SHIRTS</h1>
-            </div>
-            <div style="grid-column: span 2;">
-                <a href="#"><img src="./images/canvas-prints.jpg" alt=""></a>
-                <h1>CANVAS PRINTS</h1>
-            </div>
-            <div style="grid-column: span 2;">
-                <a  href="#"><img src="./images/all-over-t-shirts.jpg" alt=""></a>
-                <h1>ALL OVER T-SHIRTS</h1>
-            </div>
-            <div style="grid-column: span 1;" >
-                <a href="#"><img src="./images/disk-prints.jpg" alt=""></a>
-                <h1>DISK PRINTS</h1>
-            </div>
-            
+           
         </div>
+
+        <a href="#" id="loadMore" style="display: flex; justify-content: center;">Load More</a>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
     </div>
-    <aside class="lrgScreen">Floating <br> Socials <br> bar</aside>
 
 
 <script src="main.js"></script>
 <script src="https://kit.fontawesome.com/fbe16a83c9.js" crossorigin="anonymous"></script>
 </body>
 </html>
+
+<!--
+  git add *
+  git commit -m "'comment'"
+  git push origin main
+  -->

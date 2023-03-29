@@ -1,6 +1,3 @@
-//event listeners
-document.querySelector('#searchForm').addEventListener('submit', searchImages);
-
 const pexelsApiKey = 'HfZ4lA84j3fjeO4UUc4EIArKcrofmOhiaQUudScGZfk32D3cHl5ymP5i';
 
 const slideShow = document.querySelector(".slideShow");
@@ -10,24 +7,63 @@ let currentSlide = 0;
 let tryCount = 0;
 let apiUrl = `https://api.pexels.com/v1/search?`;
 
-const rand = Math.round(Math.random()*100);
+let nextPage = '';
+
+//const rand = Math.round(Math.random()*1);
+
+//check for search query
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+let searchQuery = 'Background';
+if (urlParams.has('search')) {
+  searchQuery = urlParams.get('search');
+}
 
 //fetch images and add to image carousel
-fetchPexels('background', 'landscape', slideImages.length, rand)
+fetchPexels(searchQuery, '', slideImages.length + 12, 0)
 .then((data) => {
-    for (i = 0; i < slideImages.length; i++) {
-        //asign images to DOM
-        slideImages[i].style.backgroundImage = `url(${data.photos[i].src.large})`;
-        slideImages[i].href = data.photos[i].url;
-        //asign photographer to DOM
-        slideImages[i].children[0].innerHTML = data.photos[i].photographer;
-      }
-      console.log('got images successfully');
+  for (i = 0; i < slideImages.length; i++) {
+      //asign images to DOM
+      slideImages[i].style.backgroundImage = `url(${data.photos[i].src.large})`;
+      slideImages[i].href = data.photos[i].url;
+      //asign photographer to DOM
+      slideImages[i].children[0].innerHTML = data.photos[i].photographer;
+  }
+  let gridSpan = [1, 2, 2, 1];
+  for (i = 4; i < data.photos.length; i++) {
+    document.getElementById('linksGrid').innerHTML += `
+    <div style="height: 200px; grid-column: span ${gridSpan[i % 4]}; background-size: cover; background-position: center; background-image: url(${data.photos[i].src.large})"> 
+    <a style="height: 100%; width: 100%;" href="${data.photos[i].url}" target="_blank"></a>  
+    <h1>${data.photos[i].photographer}</h1>
+    </div>
+    `;
+    gridSpan == 4 ? gridSpan = 1 : null;  
+  }
+  
+    console.log('got images successfully');
+    const displaySearch = document.getElementById('displaySearch');
+    displaySearch.innerHTML = `Showing results for "${searchQuery}"`;
 })
 .catch((error) => {
 });
 
 
+document.getElementById('loadMore').addEventListener('click', (e) => {
+  e.preventDefault();
+  LoadMore()
+  .then((data) => {
+    let gridSpan = [1, 2, 2, 1];
+    for (i = 0; i < data.photos.length; i++) {
+    document.getElementById('linksGrid').innerHTML += `
+    <div style="height: 200px; grid-column: span ${gridSpan[i % 4]}; background-size: cover; background-position: center; background-image: url(${data.photos[i].src.large})"> 
+    <a style="height: 100%; width: 100%;" href="${data.photos[i].url}" target="_blank"></a>  
+    <h1>${data.photos[i].photographer}</h1>
+    </div>
+    `;
+    gridSpan == 4 ? gridSpan = 1 : null;  
+  }
+  });
+});
 
 //rotate slides
 NextSlide();
@@ -63,32 +99,45 @@ async function fetchPexels(query, orientation, perPage, page) {
         console.error('failed to get images, trying with default images');
         tryCount++;
         if (tryCount < 2) {
-        return await fetchPexels('background', orientation, perPage, 1);
+          searchQuery += ' : No Results';
+          return await fetchPexels('background', orientation, perPage, 1);
         } else {
             console.error('failed to get images');
         }
       } else {
+        nextPage = data.next_page;
         return data;
       }
     } catch (error) {
-      console.error('Error fetching Pexels data:', error);
+      if (tryCount < 2) {
+        return await fetchPexels('background', orientation, perPage, 1);
+        } else {
+            console.error('failed to get images');
+        }
     }
   }
 
-  function searchImages(e) { 
-    e.preventDefault();
-    if (e.target[0].value !== '') {
-        fetchPexels(e.target[0].value, 'landscape', slideImages.length, 1)
-        .then((data) => {
-            for (i = 0; i < slideImages.length; i++) {
-                //asign images to DOM
-                slideImages[i].style.backgroundImage = `url(${data.photos[i].src.large})`;
-                slideImages[i].href = data.photos[i].url;
-                //asign photographer to DOM
-                slideImages[i].children[0].innerHTML = data.photos[i].photographer;
-            }
-            console.log('got images successfully');
-        })
-        e.target[0].value = '';
+  async function LoadMore() {
+    if (!nextPage) {
+      throw new Error('No more images to load');
     }
-}
+    try {
+      console.log(nextPage);
+      const response = await fetch(nextPage, {
+          method: 'GET',
+          headers: {
+            'Authorization': pexelsApiKey,
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        nextPage = data.next_page;
+        return data;
+      }
+      catch {
+        console.error('failed to get images');
+      }
+    }
