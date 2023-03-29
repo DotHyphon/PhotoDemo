@@ -1,0 +1,263 @@
+body {
+    box-sizing: border-box;
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 0;
+    margin: 0;
+    height: 200vh;
+
+}
+
+.topHeader {
+    height: 55px;
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#mainPage {
+    position:relative;
+    top: 110px;
+}
+
+.slideShow {
+    display: flex;
+    justify-content: center;
+    height: 650px;
+    margin-bottom: 20px;
+}
+
+.slideShow h1 {
+    position: absolute; 
+    margin: 10px;
+    bottom: 0; 
+    left: 0;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.slideShow a {
+    position: absolute;
+    /* center obsolute position */
+    left: 50%;
+    transform: translate(-50%);
+    height: 650px;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* hide left and right scroll */
+    overflow: hidden;
+    /* make background fill */
+    background-size: cover;
+    background-position: center;
+}
+
+.slideShow img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+#search {
+    background: #36332d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    height: 34px;
+    width: 160px;
+    margin-left: 10px;
+}
+
+#search:focus {
+    outline: none;
+}
+
+#topLogo {
+    /* border: white solid 3px;
+    border-radius: 0 0 7px 0; */
+    height: 35px;
+    font-size: 20px;
+    vertical-align: middle;
+    line-height: 35px;
+    min-width: 200px;
+
+}
+
+.hdrBlack {
+    background: black;
+    color: #e1e1e1;
+}
+.hdrBlack a {
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    text-decoration: none;
+    min-width: 100px;
+}
+.hdrBlack a:visited {
+    color: white;
+}
+
+.hdrWhite {
+    background: white;
+    color: black;
+}
+.hdrWhite a {
+    color: black;
+    font-size: 18px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.hdrWhite a:visited {
+    color: black;
+}
+
+.wrapper {
+    margin: 20px;
+}
+
+.wrapper i {
+    font-size: 24px;
+    color: white;
+    text-shadow: 0px 0px 3px black;
+}
+
+#linksGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+    margin: 20px auto;
+    gap: 10px;
+}
+
+#linksGrid div {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    /* set children to fit total width */
+    flex-direction: column;
+}
+
+#linksGrid h1 {
+    position: absolute;
+    bottom: 0;
+    color:white;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    font-size: 17px;
+    margin: 0;
+    padding: 10px 7px;
+    pointer-events: none;
+}
+
+#linksGrid img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.prev {
+    z-index: 0;
+    animation-duration: 5s;
+    animation-name: fadeOut;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+}
+
+.active {
+    z-index: -2;
+    opacity: 1;
+}
+
+.inactive {
+    z-index: -3;
+    opacity: 0;
+}
+
+
+
+ul {
+    height: 18px;
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0 10px 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;  
+    flex-wrap: wrap;
+;
+}
+
+ul li:not(:first-child)::before {
+    content: "•";
+    color: #c2b9af;
+    margin: 0 10px;
+    vertical-align: middle;
+    font-size: 30px;
+}
+
+ul li a {
+    text-decoration: none;
+    height: 18px;
+}
+
+ul li a:visited {
+    color: black;
+}
+
+@media (max-width: 1000px) {
+    .lrgScreen {
+        display: none;
+    }
+
+    .wrapper {
+        margin: 5px;
+    }
+    .wrapper a{
+        font-size: 14px;
+    }
+    .wrapper i{
+        font-size: 14px;
+    }
+
+    .slideShow, .slideShow a {
+        height: 350px;
+        width: 100%;
+    }
+    ul li{
+        font-size: 12px;
+    }
+
+    #linksGrid {
+        max-width: 750px;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+@media (min-width: 1001px) {
+    .smlScreen {
+        display: none;
+    }
+
+    #linksGrid {
+        max-width: 950px;
+    }
+}
+
+@keyframes fadeOut{
+    from {opacity: 1;}
+    70% {opacity: 1; }
+    80% {pointer-events: all;}
+    to {opacity: 0; pointer-events: none;}
+}
