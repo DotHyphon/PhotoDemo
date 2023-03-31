@@ -1,3 +1,5 @@
+
+
 const pexelsApiKey = 'HfZ4lA84j3fjeO4UUc4EIArKcrofmOhiaQUudScGZfk32D3cHl5ymP5i';
 
 const slideShow = document.querySelector(".slideShow");
@@ -9,12 +11,12 @@ let apiUrl = `https://api.pexels.com/v1/search?`;
 
 let nextPage = '';
 
-//const rand = Math.round(Math.random()*1);
-
 //check for search query
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-let searchQuery = 'Background';
+//let searchQuery = randomWord();
+let searchQuery = 'background';
+console.log(searchQuery);
 if (urlParams.has('search')) {
   searchQuery = urlParams.get('search');
 }
@@ -22,23 +24,17 @@ if (urlParams.has('search')) {
 //fetch images and add to image carousel
 fetchPexels(searchQuery, '', slideImages.length + 12, 0)
 .then((data) => {
+  console.log('1');
   for (i = 0; i < slideImages.length; i++) {
-      //asign images to DOM
-      slideImages[i].style.backgroundImage = `url(${data.photos[i].src.large})`;
-      slideImages[i].href = data.photos[i].url;
-      //asign photographer to DOM
-      slideImages[i].children[0].innerHTML = data.photos[i].photographer;
+    console.log('2');
+    //asign images to DOM
+    slideImages[i].style.backgroundImage = `url(${data.photos[i].src.large})`;
+    slideImages[i].href = data.photos[i].url;
+    //asign photographer to DOM
+    slideImages[i].children[0].innerHTML = data.photos[i].photographer;
   }
-  let gridSpan = [1, 2, 2, 1];
-  for (i = 4; i < data.photos.length; i++) {
-    document.getElementById('linksGrid').innerHTML += `
-    <div style="height: 200px; grid-column: span ${gridSpan[i % 4]}; background-size: cover; background-position: center; background-image: url(${data.photos[i].src.large})"> 
-    <a style="height: 100%; width: 100%;" href="${data.photos[i].url}" target="_blank"></a>  
-    <h1>${data.photos[i].photographer}</h1>
-    </div>
-    `;
-    gridSpan == 4 ? gridSpan = 1 : null;  
-  }
+  console.log('2');
+  AddLoadedPhotos(data);
   
     console.log('got images successfully');
     const displaySearch = document.getElementById('displaySearch');
@@ -52,21 +48,26 @@ document.getElementById('loadMore').addEventListener('click', (e) => {
   e.preventDefault();
   LoadMore()
   .then((data) => {
-    let gridSpan = [1, 2, 2, 1];
-    for (i = 0; i < data.photos.length; i++) {
-    document.getElementById('linksGrid').innerHTML += `
-    <div style="height: 200px; grid-column: span ${gridSpan[i % 4]}; background-size: cover; background-position: center; background-image: url(${data.photos[i].src.large})"> 
-    <a style="height: 100%; width: 100%;" href="${data.photos[i].url}" target="_blank"></a>  
-    <h1>${data.photos[i].photographer}</h1>
-    </div>
-    `;
-    gridSpan == 4 ? gridSpan = 1 : null;  
-  }
+    AddLoadedPhotos(data);
   });
 });
 
 //rotate slides
 NextSlide();
+
+function AddLoadedPhotos(data) {
+  console.log('adding images to DOM');
+  let gridSpan = [2, 1, 1, 2];
+  for (i = 0; i < data.photos.length; i++) {
+  document.getElementById('linksGrid').innerHTML += `
+  <div style="height: 200px; grid-column: span ${gridSpan[i % 4]}; background-size: cover; background-position: center; background-image: url(${data.photos[i].src.large})"> 
+  <a style="height: 100%; width: 100%;" href="${data.photos[i].url}" target="_blank"></a>  
+  <h1>${data.photos[i].photographer}</h1>
+  </div>
+  `;
+  gridSpan == 4 ? gridSpan = 1 : null;  
+}
+}
 
 function NextSlide() {
     slideImages[currentSlide].className = "prev";
@@ -81,63 +82,74 @@ function NextSlide() {
 
 // Function to fetch data from the Pexels API
 async function fetchPexels(query, orientation, perPage, page) {
-    apiUrl = `https://api.pexels.com/v1/search?query=${query}&orientation=${orientation}&per_page=${perPage}&page=${page}`;
+  apiUrl = `https://api.pexels.com/v1/search?query=${query}&orientation=${orientation}&per_page=${perPage}&page=${page}`;
 
-    try {
-    const response = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-          'Authorization': pexelsApiKey,
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const data = await response.json();
-      if (data.photos.length < perPage) {
-        console.error('failed to get images, trying with default images');
-        tryCount++;
-        if (tryCount < 2) {
-          searchQuery += ' : No Results';
-          return await fetchPexels('background', orientation, perPage, 1);
-        } else {
-            console.error('failed to get images');
-        }
-      } else {
-        nextPage = data.next_page;
-        return data;
-      }
-    } catch (error) {
+  try {
+  const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': pexelsApiKey,
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    if (data.photos.length < perPage) {
+      console.error('failed to get images, trying with default images');
+      tryCount++;
       if (tryCount < 2) {
+        searchQuery += ' : No Results';
         return await fetchPexels('background', orientation, perPage, 1);
-        } else {
-            console.error('failed to get images');
-        }
+      } else {
+          console.error('failed to get images');
+      }
+    } else {
+      nextPage = data.next_page;
+      return data;
     }
+  } catch (error) {
+    if (tryCount < 2) {
+      return await fetchPexels('background', orientation, perPage, 1);
+      } else {
+          console.error('failed to get images');
+      }
   }
+}
 
-  async function LoadMore() {
-    if (!nextPage) {
-      throw new Error('No more images to load');
+async function LoadMore() {
+const loadText = document.getElementById('loadMore');
+loadText.innerHTML = 'Loading...';
+loadText.disabled = true;
+loadText.style.cursor = 'not-allowed';
+loadText.style.opacity = '0.5';
+loadText.style.pointerEvents = 'none';
+
+if (!nextPage) {
+  throw new Error('No more images to load');
+}
+try {
+  const response = await fetch(nextPage, {
+      method: 'GET',
+      headers: {
+        'Authorization': pexelsApiKey,
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    try {
-      console.log(nextPage);
-      const response = await fetch(nextPage, {
-          method: 'GET',
-          headers: {
-            'Authorization': pexelsApiKey,
-            'Content-Type': 'application/json',
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        nextPage = data.next_page;
-        return data;
-      }
-      catch {
-        console.error('failed to get images');
-      }
-    }
+    const data = await response.json();
+    loadText.innerHTML = 'Load More';
+    loadText.disabled = false;
+    loadText.style.cursor = 'pointer';
+    loadText.style.opacity = '1';
+    loadText.style.pointerEvents = 'auto';
+    nextPage = data.next_page;
+    return data;
+  }
+  catch {
+    console.error('failed to get images');
+  }
+}
