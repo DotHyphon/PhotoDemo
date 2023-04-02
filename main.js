@@ -28,7 +28,7 @@ fetchPexels(searchQuery, '', slideImages.length + 12, 0)
   for (i = 0; i < slideImages.length; i++) {
     console.log('2');
     //asign images to DOM
-    slideImages[i].style.backgroundImage = `url(${data.photos[i].src.large})`;
+    slideImages[i].style.backgroundImage = `url(${data.photos[i].src.large2x})`;
     slideImages[i].href = data.photos[i].url;
     //asign photographer to DOM
     slideImages[i].children[0].innerHTML = data.photos[i].photographer;
